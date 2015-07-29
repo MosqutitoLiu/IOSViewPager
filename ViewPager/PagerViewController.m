@@ -122,7 +122,6 @@
         
         [self.view insertSubview:self.tabView atIndex:0];
         
-        //self.tabView.contentSize = CGSizeMake(contentSize, TabHeight);
     }
     
     
