@@ -149,7 +149,7 @@
     NSArray *viewControllers = @[viewController];
     
     NSInteger direct = UIPageViewControllerNavigationDirectionForward;
-    if(index >=self.tabData.count){
+    if(index >=self.tabData.count-1){
         direct = UIPageViewControllerNavigationDirectionReverse;
     }
     
