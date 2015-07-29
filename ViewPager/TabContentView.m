@@ -134,6 +134,9 @@
             frame = tabView.frame;
             //center top
             frame.origin.x+=_initFrame.size.width/2 - TabSpan;
+            if (frame.origin.x>=self.contentSize.width) {
+                frame.origin.x = frame.origin.x;
+            }
         }
     } else {
         NSInteger index = self.activeTabIndex;
@@ -144,6 +147,8 @@
         frame = tabView.frame;
         //center top
         frame.origin.x -= _initFrame.size.width/2 - TabSpan;
+        if(frame.origin.x<=0)
+            frame.origin.x = 0;
     }
     
     [self scrollRectToVisible:frame animated:YES];

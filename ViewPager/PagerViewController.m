@@ -106,7 +106,6 @@
     NSInteger ContentHeight = frameHeight - TagHeight;
     
     
-    NSInteger contentSize;
     static NSInteger tabsIdentity = 100;
     self.tabView = (TabContentView *)[self.view viewWithTag:tabsIdentity];
     
