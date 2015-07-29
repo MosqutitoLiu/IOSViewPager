@@ -72,6 +72,7 @@
         _pageView = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
                                                 navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                               options:nil];
+        
     
         [self addChildViewController:_pageView];
     
@@ -198,15 +199,15 @@
     return [self viewControllerAtIndex:index];
 }
 
-- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController
-{
-    return self.tabData.count;
-}
-
-- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController
-{
-    return 0;
-}
+//- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController
+//{
+//    return self.tabData.count;
+//}
+//
+//- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController
+//{
+//    return 0;
+//}
 
 #pragma mark - UIPageViewControllerDelegate
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
