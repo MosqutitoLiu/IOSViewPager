@@ -2,7 +2,7 @@
 IOS ViewPaper , injoy it!
 
 Here is Example
-```
+```ruby
 #import "ViewController.h"
 #import "PagerViewController.h"
 #import "DetailPageViewController.h"
