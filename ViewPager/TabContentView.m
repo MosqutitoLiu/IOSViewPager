@@ -168,6 +168,13 @@
 }
 
 
+- (NSUInteger) getTabIndex {
+    return _activeTabIndex;
+}
+
+- (NSUInteger) getLastTabIndex {
+    return _lastTabIndex;
+}
 
 - (void)drawRect:(CGRect)rect {
     

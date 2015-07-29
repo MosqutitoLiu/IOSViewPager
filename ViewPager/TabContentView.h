@@ -38,5 +38,7 @@
 
 - (id)initWithFrame:(CGRect)frame tabData:(NSArray *) tabData;
 - (void) selectTabAtIndex:(NSInteger) index;
+- (NSUInteger) getTabIndex;
+- (NSUInteger) getLastTabIndex;
 -(void) setupTabs;
 @end
