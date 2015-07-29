@@ -67,21 +67,21 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    
-    UIBezierPath *bezierPath;
-
-    if (self.selected) {
-        
-        bezierPath = [UIBezierPath bezierPath];
-        
-        // Draw the indicator
-        [bezierPath moveToPoint:CGPointMake(0.0, CGRectGetHeight(rect) - 1.0)];
-        [bezierPath addLineToPoint:CGPointMake(self.textSize.width, CGRectGetHeight(rect) - 1.0)];
-        [bezierPath setLineWidth:1.0];
-        UIColor *color = [UIColor colorWithRed:42.0/255 green: 136.0/255 blue: 204.0/255 alpha: 1];
-        [color setStroke];
-        [bezierPath stroke];
-    }
+//    
+//    UIBezierPath *bezierPath;
+//
+//    if (self.selected) {
+//        
+//        bezierPath = [UIBezierPath bezierPath];
+//        
+//        // Draw the indicator
+//        [bezierPath moveToPoint:CGPointMake(0.0, CGRectGetHeight(rect) - 1.0)];
+//        [bezierPath addLineToPoint:CGPointMake(self.textSize.width, CGRectGetHeight(rect) - 1.0)];
+//        [bezierPath setLineWidth:1.0];
+//        UIColor *color = [UIColor colorWithRed:42.0/255 green: 136.0/255 blue: 204.0/255 alpha: 1];
+//        [color setStroke];
+//        [bezierPath stroke];
+//    }
 }
 
 @end

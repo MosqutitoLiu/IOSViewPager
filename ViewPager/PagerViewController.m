@@ -19,6 +19,7 @@
 @property (strong,atomic) UIPageViewController *pageView;
 @property (strong ,nonatomic) UIView *contentView;
 @property (strong ,nonatomic) TabContentView *tabView;
+@property (strong ,nonatomic)  UIView *lineView;
 
 
 @property (strong,nonatomic) NSMutableArray *tabs;
@@ -175,6 +176,12 @@
         TabView *subTab = [[TabView alloc]initWithFrame:frame text:text textSize:textSize font:font];
         if (i==0) {
             [subTab setSelected:YES];
+            if(!_lineView){
+                CGRect lineFrame = CGRectMake(subTab.frame.origin.x,subTab.frame.size.height-1, subTab.frame.size.width,1);
+                _lineView = [[UIView alloc] initWithFrame:lineFrame];
+                _lineView.backgroundColor = [UIColor colorWithRed:42.0/255 green: 136.0/255 blue: 204.0/255 alpha: 1];
+                [tabView addSubview:_lineView];
+            }
         }
 
         [tabView addSubview:subTab];
@@ -295,6 +302,24 @@
     }
     
     [self.tabView scrollRectToVisible:frame animated:YES];
+    [self moveTagLine];
+}
+
+-(void) moveTagLine{
+    
+    TabView *tabView = [self.tabs objectAtIndex:self.activeTabIndex];
+    CGRect frame = tabView.frame;
+    frame.origin.y = frame.size.height - 1;
+    frame.size.height = 1;
+    
+    
+    [UIView animateWithDuration:0.3f
+                          delay:0.0f
+                        options:UIViewAnimationOptionTransitionNone
+                     animations:^{
+                         [_lineView setFrame:frame];
+                     }
+                     completion:nil];
 }
 
 
