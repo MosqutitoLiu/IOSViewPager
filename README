@@ -1,17 +1,10 @@
 
-IOS ViewPaper , injoy it!
 
-Here is Example:
+IOS ViewPaper
+===================
 
-
+How to Use:
 ```
-#import "ViewController.h"
-#import "PagerViewController.h"
-#import "DetailPageViewController.h"
-
-@interface ViewController () <ViewPagerDataSource>
-
-@end
 
 @implementation ViewController
 
