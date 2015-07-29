@@ -32,7 +32,8 @@
     label.font = [UIFont fontWithName:nil size:30];
     [self.view addSubview:label];
     
-    [self.view setBackgroundColor:[UIColor whiteColor]];
+    self.view.backgroundColor = [UIColor yellowColor];
+    //[self.view setBackgroundColor:[UIColor whiteColor]];
     
 }
 
