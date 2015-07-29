@@ -66,7 +66,7 @@
     }
 }
 
-- (void)drawRect:(CGRect)rect {
+//- (void)drawRect:(CGRect)rect {
 //    
 //    UIBezierPath *bezierPath;
 //
@@ -82,6 +82,6 @@
 //        [color setStroke];
 //        [bezierPath stroke];
 //    }
-}
+//}
 
 @end
