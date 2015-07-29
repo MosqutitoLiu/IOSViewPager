@@ -14,20 +14,13 @@
 #define TabSpan  20
 
 
-@interface PagerViewController () <UIPageViewControllerDataSource,UIPageViewControllerDelegate,UIScrollViewDelegate>
+@interface PagerViewController () <UIPageViewControllerDataSource,UIPageViewControllerDelegate,UIScrollViewDelegate , TagClickDelegate>
 @property (strong, nonatomic) NSArray *tabData;
 @property (strong,atomic) UIPageViewController *pageView;
 @property (strong ,nonatomic) UIView *contentView;
 @property (strong ,nonatomic) TabContentView *tabView;
-@property (strong ,nonatomic)  UIView *lineView;
 
-
-@property (strong,nonatomic) NSMutableArray *tabs;
 @property (strong,nonatomic) NSMutableArray *controllers;
-
-@property (nonatomic) NSInteger activeContentIndex;
-@property (nonatomic) NSInteger activeTabIndex;
-@property (nonatomic) NSInteger lastTabIndex;
 
 @end
 
@@ -59,9 +52,6 @@
 
 -(void) setupLayout {
     
-    _activeContentIndex = 0;
-    _activeTabIndex =0;
-    _lastTabIndex = 0;
     
     NSUInteger count = self.tabData.count;
     if (count==0) {
@@ -121,19 +111,19 @@
     self.tabView = (TabContentView *)[self.view viewWithTag:tabsIdentity];
     
     if (!self.tabView) {
-        self.tabView = [[TabContentView alloc] initWithFrame:CGRectMake(0.0, startY, frameWidth, TabHeight)];
+        self.tabView = [[TabContentView alloc] initWithFrame:CGRectMake(0.0, startY, frameWidth, TabHeight) tabData:self.tabData];
         self.tabView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.tabView.scrollsToTop = NO;
         self.tabView.showsHorizontalScrollIndicator = NO;
         self.tabView.showsVerticalScrollIndicator = NO;
         self.tabView.tag = tabsIdentity;
         self.tabView.delegate = self;
-        
-        contentSize = [self setupTabs:self.tabView width:TabWidth height:TabHeight];
+        self.tabView.controllerDelegte = self;
+        [self.tabView setupTabs];
         
         [self.view insertSubview:self.tabView atIndex:0];
         
-        self.tabView.contentSize = CGSizeMake(contentSize, TabHeight);
+        //self.tabView.contentSize = CGSizeMake(contentSize, TabHeight);
     }
     
     
@@ -150,87 +140,7 @@
     }
 }
 
--(NSInteger) setupTabs:(UIScrollView*)tabView width:(NSInteger)tabWidth height:(NSInteger) tabHeight {
-    
-    NSUInteger count = self.tabData.count;
 
-    
-    if(!self.tabs){
-        self.tabs = [NSMutableArray arrayWithCapacity:count];
-    }
-    [self.tabs removeAllObjects];
-
-    NSInteger contentSize = TabSpan;
-    NSUInteger xp = TabSpan;
-    
-    for (int i=0; i<count; i++) {
-        
-        NSString *text = [self.tabData objectAtIndex:i];
-        
-        UIFont *font = [UIFont systemFontOfSize:12.0];
-        CGSize textSize = [text sizeWithAttributes:@{NSFontAttributeName :font}];
-        CGRect frame = CGRectMake(xp, 0, textSize.width, tabHeight);
-        xp += textSize.width + TabSpan;
-        contentSize += textSize.width + TabSpan;
-        
-        TabView *subTab = [[TabView alloc]initWithFrame:frame text:text textSize:textSize font:font];
-        if (i==0) {
-            [subTab setSelected:YES];
-            if(!_lineView){
-                CGRect lineFrame = CGRectMake(subTab.frame.origin.x,subTab.frame.size.height-1, subTab.frame.size.width,1);
-                _lineView = [[UIView alloc] initWithFrame:lineFrame];
-                _lineView.backgroundColor = [UIColor colorWithRed:42.0/255 green: 136.0/255 blue: 204.0/255 alpha: 1];
-                [tabView addSubview:_lineView];
-            }
-        }
-
-        [tabView addSubview:subTab];
-        
-        // To capture tap events
-        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapGesture:)];
-        [subTab addGestureRecognizer:tapGestureRecognizer];
-        
-        
-        [self.tabs addObject:subTab];
-    }
-    
-    return contentSize;
-    
-}
-
-#pragma mark - IBAction
-- (IBAction)handleTapGesture:(id)sender {
-    
-    // Get the desired page's index
-    UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer *)sender;
-    UIView *tabView = tapGestureRecognizer.view;
-    
-    NSUInteger index = [self.tabs indexOfObject:tabView];
-    
-    if (self.activeTabIndex != index) {
-        [self selectTabAtIndex:index];
-        [self setClickTabController:index];
-    }
-}
-
-- (void) selectTabAtIndex:(NSInteger) index {
-    
-    //lastTag
-    _lastTabIndex = self.activeTabIndex;
-    
-    // Select the tab
-    self.activeTabIndex = index;
-    
-    // Set activeContentIndex
-    self.activeContentIndex = index;
-    
-    TabView *lastTabView = [self.tabs objectAtIndex:_lastTabIndex];
-    [lastTabView setSelected:NO];
-    
-    TabView *tabView = [self.tabs objectAtIndex:index];
-    [tabView setSelected:YES];
-    
-}
 
 - (void)setClickTabController:(NSInteger) index {
     
@@ -272,57 +182,6 @@
     return controller;
 }
 
--(void) moveTag {
-    
-    
-    CGRect frame;
-    
-    if (self.lastTabIndex<self.activeTabIndex) {
-        
-        if (self.activeTabIndex>=self.tabData.count) {
-            return;
-        }
-        
-        TabView *tabView = [self.tabs objectAtIndex:self.activeTabIndex];
-        if (tabView) {
-            frame = tabView.frame;
-            //center top
-            frame.origin.x+=self.view.frame.size.width/2 - TabSpan;
-        }
-    } else {
-        
-        NSInteger index = self.activeTabIndex;
-        if (index<0) {
-            index = 0;
-        }
-        TabView *tabView = [self.tabs objectAtIndex:index];
-        frame = tabView.frame;
-        //center top
-        frame.origin.x -= self.view.frame.size.width/2 - TabSpan;
-    }
-    
-    [self.tabView scrollRectToVisible:frame animated:YES];
-    [self moveTagLine];
-}
-
--(void) moveTagLine{
-    
-    TabView *tabView = [self.tabs objectAtIndex:self.activeTabIndex];
-    CGRect frame = tabView.frame;
-    frame.origin.y = frame.size.height - 1;
-    frame.size.height = 1;
-    
-    
-    [UIView animateWithDuration:0.3f
-                          delay:0.0f
-                        options:UIViewAnimationOptionTransitionNone
-                     animations:^{
-                         [_lineView setFrame:frame];
-                     }
-                     completion:nil];
-}
-
-
 
 #pragma mark - Page View Controller Data Source
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
@@ -356,10 +215,9 @@
     
     UIViewController *viewController = self.pageView.viewControllers[0];
     NSInteger index = [self.controllers indexOfObject:viewController];
-    [self selectTabAtIndex: index];
-    [self moveTag];
+    [self.tabView selectTabAtIndex: index];
+    
 }
-
 
 
 #pragma mark - UIScrollViewDelegate, Responding to Scrolling and Dragging
