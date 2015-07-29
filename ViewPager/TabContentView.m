@@ -135,7 +135,7 @@
             //center top
             frame.origin.x+=_initFrame.size.width/2 - TabSpan;
             if (frame.origin.x>=self.contentSize.width) {
-                frame.origin.x = frame.origin.x;
+                frame.origin.x = self.contentSize.width - tabView.frame.size.width;
             }
         }
     } else {
